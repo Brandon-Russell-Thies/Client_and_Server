@@ -1,5 +1,4 @@
-import socket
-import threading
+import socket, threading
 
 PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
