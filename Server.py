@@ -11,46 +11,54 @@ server.bind(ADDR)
 
 def client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
+    username = None #will be given a value when user logs in 
+    #the variable will allow us to record when the user logs in and out of the server
 
-
-    def send_message(MSG: str):
+    def send_messages(MSG: str):
         reply = MSG.encode(FORMAT)
         reply_length = len(reply)
-        send_length = str(reply_length).encode[FORMAT]
+        send_length = str(reply_length).encode(FORMAT)
         send_length += b' ' * (HEADER - len(send_length))
-        conn.send(send_length)
+        conn.send(send_length)#sends the length of the message so the program knows the size it is trying to receive
         conn.send(reply)
 
-    def receive_message():
+        
+    def receive_messages():
         message_len = conn.recv(HEADER).decode(FORMAT)
-        message_len = len(message_len)
-        message = conn.recv(message_len.decode(FORMAT))
+        message_len = int(message_len)
+        message = conn.recv(message_len).decode(FORMAT)
 
         return message
-    msg = receive_message()
-    while True:
-        if "Sign_up" in msg:
-            pass
-        elif "Login" in msg:
-            while True:
-                msg = receive_message()
+    try:
+        while True:
+            msg = receive_messages()
+            print(f"NEW message from client {addr}")
+            print(msg)
+            if "Sign_up" in msg:
+                pass
+            elif "Login" in msg:
 
-                
-                if "Send_Message" in msg:
-                    pass
-                elif "Get_settings" in msg:
-                    pass
-                elif "Edit_settings" in msg:
-                    pass
-                elif "Review_profile":
-                    pass
-                elif "Delete_message":
-                    pass
-                else:
-                    send_message("Not a vaild command")
-        else:
-            send_message("Not a vaild command")
-    
+                while True:
+                    msg = receive_messages()
+
+                    
+                    if "Send_Message" in msg:
+                        pass
+                    elif "Get_settings" in msg:
+                        pass
+                    elif "Edit_settings" in msg:
+                        pass
+                    elif "Review_profile":
+                        pass
+                    elif "Delete_message":
+                        pass
+                    else:
+                        send_messages("Not a vaild command")
+            else:
+                send_messages("Not a vaild command")
+    except ConnectionResetError:
+        print(f"Client {addr} has disconnected")
+
 print("Server starting...")
 server.listen()
 print(f'Server is listening on {SERVER}')
