@@ -40,7 +40,7 @@ def client(conn, addr):
 
                 while True:
                     msg = receive_messages()
-
+                    #After user logs in the following are the commands they will have access to
                     
                     if "Send_Message" in msg:
                         pass
@@ -48,9 +48,11 @@ def client(conn, addr):
                         pass
                     elif "Edit_settings" in msg:
                         pass
-                    elif "Review_profile":
+                    elif "Review_profile" in msg:
                         pass
-                    elif "Delete_message":
+                    elif "Delete_message" in msg:
+                        pass
+                    elif " Logout" in msg:
                         pass
                     else:
                         send_messages("Not a vaild command")
