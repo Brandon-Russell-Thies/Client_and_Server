@@ -1,0 +1,1 @@
+This project has been done as a project to learn more about the tkinter module and also the socket module.  The server excepts connections from the client and allows the client to chat with others over the server.  The user can make, edit, delete messages as they wish.  Note they cannot delete comments made by others.
