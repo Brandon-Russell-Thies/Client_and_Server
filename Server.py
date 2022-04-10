@@ -52,7 +52,9 @@ def client(conn, addr):
                         pass
                     elif "Delete_message" in msg:
                         pass
-                    elif " Logout" in msg:
+                    elif "Logout" in msg:
+                        pass
+                    elif "Send_private_message" in msg:
                         pass
                     else:
                         send_messages("Not a vaild command")
