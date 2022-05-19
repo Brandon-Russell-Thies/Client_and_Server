@@ -13,7 +13,8 @@ def client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     username = None #will be given a value when user logs in 
     #the variable will allow us to record when the user logs in and out of the server
-
+    
+    
     def send_messages(MSG: str):
         reply = MSG.encode(FORMAT)
         reply_length = len(reply)
