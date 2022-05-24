@@ -4,7 +4,7 @@
 def add_user(username: str , password: str , email: str, phone_number: int, gender: str, first_name: str, last_name: str, birthday: str, address: str):
     import mysql.connector
     from datetime import datetime
-    #imports are done inside of function to avoid issues when function is imported from another area
+    #imports are done inside of the functions to avoid issues when imported from another area
 
     data = mysql.connector.connect(
     host="localhost", 
@@ -29,7 +29,21 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
     
     c.execute("USE Userinfo;")
     try:
-        c.execute(f"INSERT INTO Users VALUES('{username}','{password}','{email}',{phone_number},'{gender}','{date_added}',{is_admin},{can_post},{is_banned},'{first_name}','{last_name}','{birthday}','{address}', NULL);")
+        c.execute(f"""INSERT INTO Users VALUES(
+            '{username}',
+            '{password}',
+            '{email}',
+            {phone_number},
+            '{gender}','
+            {date_added}',
+            {is_admin},
+            {can_post},
+            {is_banned},
+            '{first_name}',
+            '{last_name}',
+            '{birthday}',
+            '{address}', 
+            NULL);""")
     except mysql.connector.errors.IntegrityError:
         return "Failed: This username already exists!"
 
