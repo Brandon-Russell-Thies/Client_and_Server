@@ -1,0 +1,55 @@
+CREATE DATABASE Userinfo;
+USE UserInfo;
+
+CREATE TABLE Users(
+	Username VARCHAR(50) NOT NULL,
+	Pass VARCHAR(100) NOT NULL,
+	Email VARCHAR(100) NOT NULL,
+	Phone_Number INTEGER NOT NULL,
+	Gender VARCHAR(10) NOT NULL,
+	Date_added DATETIME NOT NULL,
+	Is_Admin BOOLEAN NOT NULL,
+	Can_Post BOOLEAN NOT NULL,
+	Is_Banned BOOLEAN NOT NULL,
+	First_Name VARCHAR(50) NOT NULL,
+	Last_Name VARCHAR(50) NOT NULL,
+	Birthday DATE NOT NULL,
+	Address VARCHAR(100) NOT NULL,
+	User_Description VARCHAR(1000),
+	PRIMARY KEY(Username),
+	CONSTRAINT User_Name UNIQUE(Username));
+
+CREATE TABLE Public_Posts(
+	ID INTEGER NOT NULL,
+	Username VARCHAR(50) NOT NULL,
+	Message VARCHAR(1000) NOT NULL,
+	Date_Posted DATETIME NOT NULL,
+	Is_Deleted BOOLEAN NOT NULL,
+	Date_Edited DATETIME,
+	Edited_Message  VARCHAR(1000),
+	PRIMARY KEY(ID),
+	CONSTRAINT Post_Identifier UNIQUE(ID),
+	FOREIGN KEY (Username) REFERENCES Users(Username));
+
+CREATE TABLE Client_Logs(
+	ID INTEGER NOT NULL,
+	Username VARCHAR(50) NOT NULL,
+	Date_Logged_On DATETIME NOT NULL,
+	Date_Logged_Out DATETIME,
+	Logged_OUT_Or_Dropped_Off VARCHAR(20),
+	PRIMARY KEY(ID),
+	CONSTRAINT Login UNIQUE(ID),
+	FOREIGN KEY (Username) REFERENCES Users(Username));
+
+CREATE TABLE Private_Messages(
+	ID INTEGER NOT NULL,
+	Username VARCHAR(50) NOT NULL,
+	Receiver INTEGER NOT NULL,
+	Message VARCHAR(1000) NOT NULL,
+	Message_Date DATETIME NOT NULL,
+	Is_Deleted BOOLEAN NOT NULL,
+	Date_Edited DATETIME,
+	Edited_Message VARCHAR(1000),
+	PRIMARY KEY (ID),
+	CONSTRAINT Private_msg UNIQUE(ID),
+	FOREIGN KEY (Username) REFERENCES Users(Username));
