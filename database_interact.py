@@ -1,5 +1,6 @@
 
 
+
 def add_user(username: str , password: str , email: str, phone_number: int, gender: str, first_name: str, last_name: str, birthday: str, address: str):
     import mysql.connector
     from datetime import datetime
@@ -15,6 +16,7 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
     is_admin = False
     can_post = True
     is_banned = False
+
     if len(username) == 0 or len(password) == 0 or len(first_name) == 0 or len(last_name) == 0 or len(address) == 0:
         return "Failed: Please finish filling out all the information."
     try:
@@ -23,8 +25,7 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
         return "Failed: not a valid date"
     
     if gender != "Male" and gender != "Female":
-        return "Failed: Please input 'Male', or 'Female' as your gender."
-    
+        return "Failed: Please input 'Male', or 'Female' as your gender." 
     
     c.execute("USE Userinfo;")
     try:
@@ -38,22 +39,28 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
     return "Successful"
 
 
-print(add_user("Brandon", "brandonpass", "brandonemail", 123245343, "Male", "Brandon", "brandpass","09-16-2002", "crazy lane 1253"))
+
+def login_user(username: str, password: str):
+    import mysql.connector
+
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor(buffered=True)
+    c.execute("USE Userinfo;")
+    c.execute(f"SELECT Username, pass FROM Users WHERE Username = '{username}';")
+    user = c.fetchone()
+    c.close()
+    data.commit()
+    if user == None:
+        return "Failed: Username does not exist!"
+    if user[1] != password:
+        return "Failed: Incorrect password!"
+    return "Succussful"
+    
+    
+    
 
 
-
-
-"""data = mysql.connector.connect(
-    host="localhost", 
-    user="root", 
-    passwd="special")
-
-
-c = data.cursor(buffered=True)
-c.execute("USE Userinfo;")
-c.execute("SELECT count(*) FROM Userinfo.Users")
-
-problems = c.fetchone()
-print(problems[0])
-c.close()
-data.commit()"""
