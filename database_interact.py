@@ -1,11 +1,8 @@
-
+import mysql.connector
+from datetime import datetime
 
 
 def add_user(username: str , password: str , email: str, phone_number: int, gender: str, first_name: str, last_name: str, birthday: str, address: str):
-    import mysql.connector
-    from datetime import datetime
-    #imports are done inside of the functions to avoid issues when imported from another area
-
     data = mysql.connector.connect(
     host="localhost", 
     user="root", 
@@ -20,7 +17,7 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
     if len(username) == 0 or len(password) == 0 or len(first_name) == 0 or len(last_name) == 0 or len(address) == 0:
         return "Failed: Please finish filling out all the information."
     try:
-        birthday = datetime.strptime(birthday, '%m-%d-%Y').date()
+        birthday = datetime.strptime(birthday, '%m-%d-%Y').date()#Example of a valid date: 09-16-2002
     except ValueError:
         return "Failed: not a valid date"
     
@@ -52,10 +49,9 @@ def add_user(username: str , password: str , email: str, phone_number: int, gend
 
     return "Successful"
 
-
+#print(add_user("Brandon", "brandpass", "brandmail", 103944, "Male", "Brandon", "Thies", "05-25-2002", "Lazy Lane 83728"))
 
 def login_user(username: str, password: str):
-    import mysql.connector
 
     data = mysql.connector.connect(
         host="localhost",
@@ -73,8 +69,115 @@ def login_user(username: str, password: str):
     if user[1] != password:
         return "Failed: Incorrect password!"
     return "Succussful"
-    
-    
-    
 
 
+
+def login_session(user):
+    #The following lines of code works to get the number of logs in the database
+    #the program will then add one more to the count and make that be the new log ID
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor(buffered=True)
+    c.execute("USE Userinfo")
+
+    c.execute("SELECT COUNT(*) FROM Client_Logs;")
+    ID = c.fetchone()
+    
+    data.commit()
+    c.close()
+    ###########################################
+
+    logged_in_date = datetime.now()
+    
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor()
+        
+    try:
+        c.execute("USE Userinfo")
+        c.execute(f"INSERT INTO Client_Logs VALUES({ID[0]+1}, '{user}', '{logged_in_date}', NULL, NULL);")
+        data.commit()
+        c.close()
+        return ID
+    except mysql.connector.errors.IntegrityError:
+        return "Falied: Username is not in Database"
+
+
+
+def logout_session(log_ID, logged_or_dropped):
+
+    Logged_Out = datetime.now()
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor()
+    c.execute("USE Userinfo;")
+    c.execute(f"""UPDATE Client_Logs SET 
+        Date_Logged_Out = '{Logged_Out}', 
+        Logged_Out_Or_Dropped_Off = '{logged_or_dropped}' 
+        WHERE ID = {log_ID};""")
+
+    data.commit()
+    c.close()
+
+    return "Successful!"
+            
+#print(login_session("Brandon")[0])
+#print(logout_session(1, "Dropped off"))
+
+def get_public_post():
+
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor(buffered=True)
+    c.execute("USE Userinfo")
+    c.execute("SELECT Username, Msg, Date_Posted FROM Public_Posts WHERE Is_Deleted = False;")
+    message = c.fetchall()
+    return message
+
+#print(get_public_post())
+
+def inserting_post(msg, author):
+    time = datetime.now()
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor(buffered=True)
+    c.execute("USE Userinfo")
+
+    c.execute("SELECT COUNT(*) FROM Public_Posts;")
+    ID = c.fetchone()
+    
+    data.commit()
+    c.close()
+
+    data = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="special"
+    )
+    c = data.cursor()
+    c.execute("USE Userinfo")
+    try:
+        c.execute(f"INSERT INTO Public_Posts VALUES('{ID[0]+1}', '{author}', '{msg}', '{time}', False);")
+    except mysql.connector.errors.IntegrityError:
+        return "Failed: Not a vaild username!"
+    data.commit()
+    c.close()
+
+    return "Successful!"
+
+print(inserting_post("This is a test!", "Brandon"))
