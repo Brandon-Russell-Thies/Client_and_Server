@@ -42,10 +42,15 @@ CREATE TABLE Client_Logs(
 CREATE TABLE Private_Messages(
 	ID INTEGER NOT NULL,
 	Username VARCHAR(50) NOT NULL,
-	Receiver INTEGER NOT NULL,
+	Receiver VARCHAR(50) NOT NULL,
 	Msg VARCHAR(1000) NOT NULL,
 	Msg_Date DATETIME NOT NULL,
 	Is_Deleted BOOLEAN NOT NULL,
 	PRIMARY KEY (ID),
 	CONSTRAINT Private_msg UNIQUE(ID),
-	FOREIGN KEY (Username) REFERENCES Users(Username));
+	FOREIGN KEY (Username) REFERENCES Users(Username),
+	FOREIGN KEY (Receiver) REFERENCES Users(Username));
+
+
+
+
