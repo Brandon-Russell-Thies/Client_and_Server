@@ -1,3 +1,9 @@
+"""
+This module can be used to interact with the database to insert,
+select, or update data.
+"""
+
+
 #These are the imports needed for the functions defined in this module
 #to work propertly. This module has been mainly designed to allow the
 #functions to be imported into other projects. Thus, the following
